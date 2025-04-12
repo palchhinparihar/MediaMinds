@@ -7,7 +7,7 @@ const NewsItem = (props) => {
       <div className="card-body">
         <h5 className="card-title">{props.title}</h5>
         <p className="card-text">{props.desc}</p>
-        <a href={props.newUrl} target="_blank" className="btn btn-sm btn-success">Read more</a>
+        <a href={props.newsUrl} target="_blank" className="btn btn-sm btn-success">Read more</a>
       </div>
     </div>
   )
