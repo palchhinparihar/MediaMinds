@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import NewsItem from './NewsItem';
+import Spinner from './Spinner';
 
-const News = () => {
+const News = (props) => {
   const [news, setNews] = useState({
     articles: [],
-    loading: false,
+    totalResults: 0,
     page: 1,
-    totalResults: 0
+    loading: false
   });
 
   useEffect(() => {
@@ -18,21 +19,23 @@ const News = () => {
   }
 
   const handleNextClick = () => {
-    if (news.page + 1 <= Math.ceil(news.totalResults / 10)) {
+    if (news.page + 1 <= Math.ceil(news.totalResults / props.pageSize)) {
       fetchNews(news.page + 1);
     }
   }
 
-  const fetchNews = async (page) => {
+  const fetchNews = async (pageNo) => {
     try {
-      const response = await fetch(`https://newsapi.org/v2/top-headlines?country=us&apiKey=243a0615c67c467f970712609f4a068b&page=${page}&pageSize=10`);
+      setNews({...news, loading: true});
+
+      const response = await fetch(`https://newsapi.org/v2/top-headlines?country=us&apiKey=243a0615c67c467f970712609f4a068b&page=${pageNo}&pageSize=${props.pageSize}`);
       const data = await response.json();
       
       setNews({
         articles: data.articles,
-        loading: false,
-        page: page,
-        totalResults: data.totalResults
+        totalResults: data.totalResults,
+        page: pageNo,
+        loading: false
       });
     } catch (error) {
       console.error('Failed to fetch users:', error);
@@ -42,9 +45,10 @@ const News = () => {
   return (
     <div className="container my-4">
       <h1 className="text-center mb-5">MediaMinds Top Headlines</h1>
+      {news.loading && <Spinner className="my-4" />}
 
       <div className="row row-gap-4">
-        {news.articles.map((article, index) => {
+        {!news.loading && news.articles.map((article, index) => {
           return (
           <div className="col-md-4 d-flex justify-content-center text-center" key={index}>
             <NewsItem title={article.title} desc={article.description} imageUrl={article.urlToImage} newsUrl={article.url} />
@@ -54,7 +58,7 @@ const News = () => {
 
       <div className="container d-flex justify-content-between px-5 my-3">
         <button disabled={news.page <= 1} type="button" className="btn btn-dark" onClick={handlePreviousClick}>&larr; Previous</button>
-        <button type="button" className="btn btn-dark" onClick={handleNextClick}>Next &rarr;</button>
+        <button disabled={(news.page + 1 > Math.ceil(news.totalResults / props.pageSize))} type="button" className="btn btn-dark" onClick={handleNextClick}>Next &rarr;</button>
       </div>
     </div>
   )
