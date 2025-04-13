@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import NewsItem from './NewsItem';
 import Spinner from './Spinner';
+import PropTypes from 'prop-types';
 
 const News = (props) => {
   const [news, setNews] = useState({
@@ -28,7 +29,7 @@ const News = (props) => {
     try {
       setNews({...news, loading: true});
 
-      const response = await fetch(`https://newsapi.org/v2/top-headlines?country=us&apiKey=243a0615c67c467f970712609f4a068b&page=${pageNo}&pageSize=${props.pageSize}`);
+      const response = await fetch(`https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=243a0615c67c467f970712609f4a068b&page=${pageNo}&pageSize=${props.pageSize}`);
       const data = await response.json();
       
       setNews({
@@ -56,12 +57,18 @@ const News = (props) => {
         )})}
       </div>
 
-      <div className="container d-flex justify-content-between px-5 my-3">
+      <div className="container d-flex justify-content-between px-5 my-3 gap-2">
         <button disabled={news.page <= 1} type="button" className="btn btn-dark" onClick={handlePreviousClick}>&larr; Previous</button>
         <button disabled={(news.page + 1 > Math.ceil(news.totalResults / props.pageSize))} type="button" className="btn btn-dark" onClick={handleNextClick}>Next &rarr;</button>
       </div>
     </div>
   )
 }
+
+News.propTypes = {
+  pageSize: PropTypes.number,
+  country: PropTypes.string,
+  category: PropTypes.string,
+};
 
 export default News;
