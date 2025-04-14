@@ -52,7 +52,7 @@ const News = (props) => {
         {!news.loading && news.articles.map((article, index) => {
           return (
           <div className="col-md-4 d-flex justify-content-center text-center" key={index}>
-            <NewsItem title={article.title} desc={article.description} imageUrl={article.urlToImage} newsUrl={article.url} />
+            <NewsItem title={article.title} desc={article.description} imageUrl={article.urlToImage} newsUrl={article.url} author={article.author} date={article.publishedAt} source={article.source.name} />
           </div>
         )})}
       </div>
