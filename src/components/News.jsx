@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { capitalize } from '../utils';
+
 import NewsItem from './NewsItem';
 import Spinner from './Spinner';
 import PropTypes from 'prop-types';
@@ -38,6 +40,8 @@ const News = (props) => {
         page: pageNo,
         loading: false
       });
+
+      document.title = `MediaMinds - ${capitalize(props.category)}`;
     } catch (error) {
       console.error('Failed to fetch users:', error);
     }
@@ -45,7 +49,7 @@ const News = (props) => {
 
   return (
     <div className="container my-4">
-      <h1 className="text-center mb-5">MediaMinds Top Headlines</h1>
+      <h1 className="text-center mb-5">{`MediaMinds Top ${capitalize(props.category)} Headlines`}</h1>
       {news.loading && <Spinner className="my-4" />}
 
       <div className="row row-gap-4">
