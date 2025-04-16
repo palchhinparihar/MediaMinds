@@ -21,8 +21,11 @@ const News = (props) => {
 
   const fetchNews = async (pageNo) => {
     try {
-      const response = await fetch(`https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=243a0615c67c467f970712609f4a068b&page=${pageNo}&pageSize=${props.pageSize}`);
+      const response = await fetch(`https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=${props.apiKey}&page=${pageNo}&pageSize=${props.pageSize}`);
+      if (pageNo === 1) props.setProgress(40);
+
       const data = await response.json();
+      if (pageNo === 1) props.setProgress(80);
   
       setNews((prev) => ({
         articles: pageNo === 1 ? data.articles  : [...prev.articles, ...data.articles],
@@ -31,6 +34,7 @@ const News = (props) => {
       }));
 
       document.title = `MediaMinds - ${capitalize(props.category)}`;
+      if (pageNo === 1) props.setProgress(100);
 
       if (data.articles.length === 0) {
         setHasMore(false);

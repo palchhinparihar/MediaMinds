@@ -3,7 +3,7 @@ import React from 'react'
 const NewsItem = (props) => {
   return (
     <div className="card bg-light" style={{width: "21rem"}}>
-      <img src={props.imageUrl} className="card-img-top" style={{height: "180px"}} alt={props.title} />
+      <img src={props.imageUrl} className="card-img-top object-fit-cover" style={{height: "180px"}} alt={props.title} />
 
       <div className="card-body">
         <h5 className="card-title">{props.title.split(" - ")[0]}</h5>
