@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import { Link } from 'react-router-dom';
+import '../index.css';
 
 const Navbar = () => {
   const collapseRef = useRef(null);
@@ -50,6 +51,10 @@ const Navbar = () => {
                 <Link className="nav-link" to="/technology" onClick={handleNavClick}>Technology</Link>
               </li>
             </ul>
+            <form className="d-flex" role="search">
+              <input autoFocus className="form-control me-2 search-md-width" type="search" placeholder="Search news..." aria-label="Search" />
+              <button className="btn btn-outline-success" type="submit"><img style={{width: "28px", filter: "invert(100%)"}} src="/search.png" alt="Search" /></button>
+            </form>
           </div>
         </div>
       </nav>
