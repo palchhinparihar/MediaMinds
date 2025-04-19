@@ -16,25 +16,33 @@ const News = (props) => {
   const [hasMore, setHasMore] = useState(true);
 
   useEffect(() => {
-    fetchNews(news.page);
-  }, []);
+    // Reset to page 1 and fetch when search query/category changes
+    fetchNews(news.page, props.searchQuery);
+  }, [props.searchQuery, props.category]);
 
   const fetchMoreData = () => {
     if (hasMore) {
       const nextPage = news.page + 1;
-      setNews((prev) => ({ ...prev, page: nextPage }));
-      fetchNews(nextPage);
+      fetchNews(nextPage, props.searchQuery);
     }
   };
 
-  const fetchNews = async (pageNo) => {
+  const fetchNews = async (pageNo, query) => {
     try {
-      document.title = `MediaMinds - ${capitalize(props.category)}`;
+      // Update title
+      document.title = query
+        ? `MediaMinds - Results for ${capitalize(query)}`
+        : `MediaMinds - ${capitalize(props.category)}`;
 
-      const response = await fetch(`https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=${props.apiKey}&page=${pageNo}&pageSize=${props.pageSize}`);
+      const url = query
+        ? `https://newsapi.org/v2/top-headlines?q=${query}&country=${props.country}&category=${props.category}&apiKey=${props.apiKey}&page=${pageNo}&pageSize=${props.pageSize}`
+        : `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=${props.apiKey}&page=${pageNo}&pageSize=${props.pageSize}`;
+
       if (pageNo === 1) props.setProgress(40);
 
+      const response = await fetch(url);
       const data = await response.json();
+
       if (pageNo === 1) props.setProgress(80);
 
       setNews((prev) => ({
@@ -55,29 +63,47 @@ const News = (props) => {
 
   return (
     <div className="my-4">
-      <h1 className="text-center px-3" style={{ margin: "80px 0px 35px 0px" }}>{`MediaMinds Top ${capitalize(props.category)} Headlines`}</h1>
+      <h1 className="text-center px-3" style={{ margin: "80px 0px 35px 0px" }}>
+        {props.searchQuery
+          ? `Search Results for ${capitalize(props.searchQuery)}`
+          : `MediaMinds Top ${capitalize(props.category)} Headlines`}
+      </h1>
 
-      <InfiniteScroll dataLength={news.articles.length} next={fetchMoreData} hasMore={hasMore} loader={<Spinner />} >
+      <InfiniteScroll
+        dataLength={news.articles.length}
+        next={fetchMoreData}
+        hasMore={hasMore}
+        loader={<Spinner />}
+      >
         <div className="container">
           <div className="row row-gap-4">
-            {news.articles.map((article, index) => {
-              return (
-                <div className="col-md-4 d-flex justify-content-center text-center" key={index}>
-                  <NewsItem title={article.title} desc={article.description} imageUrl={article.urlToImage} newsUrl={article.url} author={article.author} date={article.publishedAt} source={article.source.name} />
-                </div>
-              )
-            })}
+            {news.articles.map((article, index) => (
+              <div className="col-md-4 d-flex justify-content-center text-center" key={index}>
+                <NewsItem
+                  title={article.title}
+                  desc={article.description}
+                  imageUrl={article.urlToImage}
+                  newsUrl={article.url}
+                  author={article.author}
+                  date={article.publishedAt}
+                  source={article.source.name}
+                />
+              </div>
+            ))}
           </div>
         </div>
       </InfiniteScroll>
     </div>
-  )
-}
+  );
+};
 
 News.propTypes = {
   pageSize: PropTypes.number,
   country: PropTypes.string,
   category: PropTypes.string,
+  searchQuery: PropTypes.string,
+  setProgress: PropTypes.func,
+  apiKey: PropTypes.string
 };
 
 export default News;
