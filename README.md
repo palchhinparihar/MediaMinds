@@ -69,6 +69,3 @@ See the [LICENSE](LICENSE) file for details.
 
 Made with ❤️ using React + Bootstrap  
 Stay informed with **MediaMinds** – Top Headlines, Tailored for You.
-```
-
-Let me know your GitHub username if you want me to add the correct repo link or if you'd like to include a logo or preview image!
