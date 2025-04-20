@@ -16,8 +16,14 @@ const News = (props) => {
   const [hasMore, setHasMore] = useState(true);
 
   useEffect(() => {
-    // Reset to page 1 and fetch when search query/category changes
-    fetchNews(news.page, props.searchQuery);
+    // Clear previous news and reset everything
+    setNews({
+      articles: [],
+      totalResults: 0,
+      page: 1
+    });
+    setHasMore(true);
+    fetchNews(1, props.searchQuery);
   }, [props.searchQuery, props.category]);
 
   const fetchMoreData = () => {
@@ -53,7 +59,7 @@ const News = (props) => {
 
       if (pageNo === 1) props.setProgress(100);
 
-      if (data.articles.length === 0) {
+      if (data.articles.length === 0 || (news.articles.length + data.articles.length) >= data.totalResults) {
         setHasMore(false);
       }
     } catch (error) {
@@ -69,25 +75,12 @@ const News = (props) => {
           : `MediaMinds Top ${capitalize(props.category)} Headlines`}
       </h1>
 
-      <InfiniteScroll
-        dataLength={news.articles.length}
-        next={fetchMoreData}
-        hasMore={hasMore}
-        loader={<Spinner />}
-      >
+      <InfiniteScroll dataLength={news.articles.length} next={fetchMoreData} hasMore={hasMore} loader={<Spinner />}>
         <div className="container">
           <div className="row row-gap-4">
             {news.articles.map((article, index) => (
               <div className="col-md-4 d-flex justify-content-center text-center" key={index}>
-                <NewsItem
-                  title={article.title}
-                  desc={article.description}
-                  imageUrl={article.urlToImage}
-                  newsUrl={article.url}
-                  author={article.author}
-                  date={article.publishedAt}
-                  source={article.source.name}
-                />
+                <NewsItem title={article.title} desc={article.description} imageUrl={article.urlToImage} newsUrl={article.url} author={article.author} date={article.publishedAt} source={article.source.name} />
               </div>
             ))}
           </div>
