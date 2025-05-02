@@ -14,7 +14,7 @@ function App() {
 
   return (
     <>
-      <BrowserRouter>
+      <BrowserRouter >
         <Navbar setSearchQuery={setSearchQuery} />
         <LoadingBar color="#4486c8" height={3} progress={progress} />
         <Routes>
