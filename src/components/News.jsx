@@ -68,12 +68,19 @@ const News = (props) => {
   };
 
   return (
-    <div className="my-4">
-      <h1 className="text-center px-3" style={{ margin: "80px 0px 35px 0px" }}>
+    <div className="py-4 min-vh-100" style={{ backgroundColor: "#76a176" }}>
+      <h1 className="text-center px-3 fw-semibold" style={{ margin: "80px 0px 35px 0px", fontFamily: "Poppins, san-serif" }}>
         {props.searchQuery
           ? `Search Results for ${capitalize(props.searchQuery)}`
           : `MediaMinds Top ${capitalize(props.category)} Headlines`}
       </h1>
+
+      {news.articles.length === 0 && !hasMore && (
+        <div className="text-center">
+          <img className="rounded-1 my-2 shadow-lg" style={{ width: "20rem" }} src="/error.jpeg" alt="Not Found results" />
+          <p className="text-center fs-4 fw-medium mt-1">No results found for <span className="text-decoration-underline">{props.searchQuery}</span></p>
+        </div>
+      )}
 
       <InfiniteScroll dataLength={news.articles.length} next={fetchMoreData} hasMore={hasMore} loader={<Spinner />}>
         <div className="container">
