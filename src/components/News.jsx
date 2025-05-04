@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { capitalize } from '../utils';
 
@@ -7,6 +9,8 @@ import Spinner from './Spinner';
 import PropTypes from 'prop-types';
 
 const News = (props) => {
+  const navigate = useNavigate();
+
   const [news, setNews] = useState({
     articles: [],
     totalResults: 0,
@@ -59,12 +63,17 @@ const News = (props) => {
 
       if (pageNo === 1) props.setProgress(100);
 
-      if (data.articles.length === 0 || (news.articles.length + data.articles.length) >= data.totalResults) {
+      if (data.articles.length === 0 && pageNo === 1) {
         setHasMore(false);
       }
     } catch (error) {
       console.error('Failed to fetch news:', error);
     }
+  };
+
+  const handleBackClick = () => {
+    props.setSearchQuery('');
+    navigate(`/${props.category}`);
   };
 
   return (
@@ -79,6 +88,7 @@ const News = (props) => {
         <div className="text-center">
           <img className="rounded-1 my-2 shadow-lg" style={{ width: "20rem" }} src="/error.jpeg" alt="Not Found results" />
           <p className="text-center fs-4 fw-medium mt-1">No results found for <span className="text-decoration-underline">{props.searchQuery}</span></p>
+          <button onClick={handleBackClick} type="button" className="btn btn-dark">Back</button>
         </div>
       )}
 
