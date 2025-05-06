@@ -4,6 +4,11 @@
 
 ---
 
+## 📸 Project Video
+[MediaMinds](https://youtu.be/TUNlobyS6jQ)
+
+---
+
 ## 🚀 Features
 
 - 🔍 Browse top headlines by category (Business, Technology, Sports, Health, and more)
